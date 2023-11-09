@@ -1,3 +1,4 @@
+#Dockerfile
 FROM php:8.1.0-apache
 WORKDIR /var/www/html
 COPY ./src/ /var/www/html/
@@ -29,12 +30,3 @@ RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
-
-# Set permissions
-#RUN chown -R www-data:www-data /var/www/html/
-#RUN chmod -R 755 /var/www/html/storage
-#RUN chown -R www-data:www-data /var/www/html/storage
-#RUN chmod -R 777 /var/www/html/storage
-#RUN chmod -R 775 /var/www/html/
-#RUN chmod -R 775 /var/www/html/vendor
-#RUN chmod -R 777 /var/www/html/storage
