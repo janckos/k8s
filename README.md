@@ -3,6 +3,7 @@ El proyecto pretende definir las bases de configuración y despliegue de aplicac
 ## Estructura del repositorio
 | Directorio/Archivo  | Descripción|
 | ------------- |:-------------:|
+| [api.yaml](https://github.com/janckos/k8s/blob/master/api.yaml)   | Contiene la definición de los endpoints de la API.     |
 | [Dockerfile](https://github.com/janckos/cloud/blob/master/Dockerfile)   | Contiene las instrucciones para configurar un contenedor con php/apache y librerías necesarias para una aplicación/laravel.     |
 | [src/](https://github.com/janckos/cloud/tree/master/src)      | Contiene el código fuente de la aplicación/laravel y está vinculado a la ruta de despliegue de aplicaciones de apache.     |
 [resources/manifests/](https://github.com/janckos/k8s/tree/master/resources/manifests)      |Contiene los artefactos yaml de Kubernetes.     |
