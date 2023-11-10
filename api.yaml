@@ -1,0 +1,172 @@
+openapi: 3.0.2
+info:
+  title: Tasks Microservice Endpoints
+  description: Definición de los Endpoints de Tasks
+  contact:
+    name: UNAM
+    url: https://www.unam.mx/
+    email: janckos@gmail.com
+  version: v1
+servers:
+- url: http://localhost:9000/public
+tags:
+- name: tarea
+  description: API del Recurso Task
+paths:
+  /api/tasks:
+    get:
+      tags:
+        - tarea
+      summary: Listar Tareas
+      operationId: index
+      responses:
+        "200":
+          description: Listado de tareas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TasksResponse'
+        "500":
+          description: Ha ocurrido un error al recuperar las tareas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/tasks/store:
+    post:
+      tags:
+      - tarea
+      summary: Crear nueva tarea
+      operationId: store
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:          # <!--- form field name
+                  type: string
+                description:    # <!--- form field name
+                  type: string
+              required:
+                - title
+                - description
+      responses:
+        "201":
+          description: Tarea creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TareaResponse'
+        "500":
+          description: No se pudo crear la tarea
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/tasks/id:
+    get:
+      tags:
+        - tarea
+      summary: Obtiene una tarea por id
+      operationId: show
+      responses:
+        "200":
+          description: Obtiene una tarea por identificador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TareaResponse'
+        "404":
+          description: Tarea no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/tasks/id:
+    put:
+      tags:
+      - tarea
+      summary: Actualizar tarea existente
+      operationId: update
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:          # <!--- form field name
+                  type: string
+                description:    # <!--- form field name
+                  type: string
+              required:
+                - title
+                - description
+      responses:
+        "201":
+          description: Tarea actualizada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TareaResponse'
+        "404":
+          description: Tarea no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+/api/tasks/id:
+    delete:
+      tags:
+      - tarea
+      summary: Eliminar tarea existente
+      operationId: destroy
+      responses:
+        "201":
+          description: Tarea eliminada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TareaResponse'
+        "404":
+          description: Tarea no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    TareaRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    TareaResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    TareasResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/TareaResponse'
+
+    ErrorResponse:
+      type: object
+      properties:
+        estatus:
+          type: integer
+        mensaje:
+          type: string  
