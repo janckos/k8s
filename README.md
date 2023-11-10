@@ -3,48 +3,76 @@ El proyecto pretende definir las bases de configuración y despliegue de aplicac
 ## Estructura del repositorio
 | Directorio/Archivo  | Descripción|
 | ------------- |:-------------:|
-| [docker-compose.yaml](https://github.com/janckos/cloud/blob/master/docker-compose.yaml)      | Contiene las instrucciones para la configuración de servicios/imágenes.    |
-| [data/](https://github.com/janckos/cloud/tree/master/data)      |Volumen: Contiene la data de postgres.     |
 | [Dockerfile](https://github.com/janckos/cloud/blob/master/Dockerfile)   | Contiene las instrucciones para configurar un contenedor con php/apache y librerías necesarias para una aplicación/laravel.     |
-| [src/](https://github.com/janckos/cloud/tree/master/src)      | Volumen: Contiene el código fuente de la aplicación/laravel y está vinculado a la ruta de despliegue de aplicaciones de apache.     |
+| [src/](https://github.com/janckos/cloud/tree/master/src)      | Contiene el código fuente de la aplicación/laravel y está vinculado a la ruta de despliegue de aplicaciones de apache.     |
+[resources/manifests/](https://github.com/janckos/k8s/tree/master/resources/manifests)      |Contiene los artefactos yaml de Kubernetes.     |
 ## Guía de despliegue
-Clonar el repositorio en un directorio local:\
+Utiliza el comando kubectl apply para aplicar los archivos YAML (resources/manifests). Esto desplegará la aplicación en el clúster de Kubernetes:
+
+### Database (PostgreSQL)
+Deploy the Persistent Volume:\
 ``
-git clone https://github.com/janckos/cloud.git
+kubectl apply -f db-persistent-volume.yaml
 ``
 
-Dentro del repositorio local, construir la imagen:\
+Deploy the Persistent Volume Claim:\
 ``
-docker compose build
+kubectl apply -f db-volume-claim.yaml
 ``
 
-Ejecutar los servicios en modo desatendido:\
+Deploy the environment variables needed by the cluster:\
 ``
-docker compose up -d
+kubectl apply -f db-configmap.yaml
+``
+
+Create the deployment:\
+``
+kubectl apply -f db-deployment.yaml
+``
+
+Run the service to expose the cluster:\
+``
+kubectl apply -f db-service.yaml
+``
+### Laravel app
+
+
+
+Create the deployment:\
+``
+kubectl apply -f laravel-app-deployment.yaml
+``
+
+
+Run the service to expose the cluster:\
+``
+kubectl apply -f laravel-app-service.yaml
 ``
 
 ## Instrucciones para ejecutar
-Instalar dependencias del la aplicación dentro del contenedor vía Composer:
-```shell
-docker compose exec phpa composer update
-```
 
-Generar la llave de la aplicación/laravel:
+Ingresar al pod de la aplicación y establecer permisos adecuados a carpetas específicas: 
 ```shell
-docker compose exec phpa php artisan key:generate
+chmod 775 vendor/ -R
+chmod 775 public/ -R
+chmod 777 storage/ -R
 ```
-
-Ejecutar las migraciones en la base de datos:
+Ejecutar las migraciones de laravel, necesarias para construir las relaciones en la base de datos: 
 ```shell
-docker compose exec phpa php artisan migrate
+php artisan migrate
 ```
 
 ## Pruebas del servicio, con ejemplos de respuesta del servicio.
+Para la realización de pruebas, crear un Pod temporal en el clúster y usar curl para acceder al servicio y verificar que esté funcionando correctamente.
+```shell
+kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm
+```
+Dentro del Pod de depuración, ejecuta los siguientes comandos para validar los endpoints.
 
 ### `GET` /api/tasks – obtener todas las tareas
 Execute the next `curl` command to validate the deploy of this endpoint.
 ```shell
-curl http://localhost:9000/public/api/tasks
+curl laravel-app-service/public/api/tasks
 ```
 The expected result should looks like:
 ```shell
@@ -57,12 +85,13 @@ The expected result should looks like:
 Execute the next `curl` command to validate the deploy of this endpoint.
 ```shell
 curl -X POST \
-	'http://localhost:9000/public/api/tasks' \
+	laravel-app-service/public/api/tasks \
 	-H "Content-Type: application/json" \
 	-d ‘{
 		"title":"New Record",
 		"description":"This is a new record"
 	}’
+
 ```
 The expected result should looks like:
 ```shell
@@ -76,7 +105,7 @@ The expected result should looks like:
 ### `GET` /api/tasks/{id} – obtener una tarea específica
 Execute the next `curl` command to validate the deploy of this endpoint.
 ```shell
-curl http://localhost:9000/public/api/tasks/1 
+curl laravel-app-service/public/api/tasks/2 
 ```
 The expected result should looks like:
 ```shell
@@ -95,7 +124,7 @@ The expected result should looks like:
 Execute the next `curl` command to validate the deploy of this endpoint.
 ```shell
 curl -X PUT \
-	'http://localhost:9000/public/api/tasks/1' \
+	laravel-app-service/public/api/tasks \
 	-H "Content-Type: application/json" \
 	-d ‘{
 		"title":"First Record",
@@ -119,8 +148,7 @@ The expected result should looks like:
 ### `DELETE` /api/tasks/{id} – eliminar una tarea específica
 Execute the next `curl` command to validate the deploy of this endpoint.
 ```shell
-curl -X DELETE
-	'http://localhost:9000/public/api/tasks/4'
+curl -X DELETE laravel-app-service/public/api/tasks/4
 ```
 The expected result should looks like:
 ```shell
@@ -131,12 +159,7 @@ The expected result should looks like:
 
 *El presente contenido irá cambiando a lo largo del diplomado para incorporar lo aprendido.*
 ## Referencias al proyecto
-Imágenes de Docker Hub:
+Imágenes de Docker Hub: 
+- [How to Deploy PostgreSQL Instance to Kubernetes](https://sweetcode.io/how-to-deploy-postgresql-instance-to-kubernetes/ )
 - [php:8.1.0-apache](https://hub.docker.com/layers/library/php/8.1.0-apache/images/sha256-0ebdfb1aff16a9ccb4b4f0613023cad6f5a237a8ed333a455502d9f78257125c?context=explore)
-- [postgres](https://hub.docker.com/_/postgres)
-- [dpage/pgadmin4](https://hub.docker.com/r/dpage/pgadmin4)
-
-Herramientas:
-- [Compose](https://docs.docker.com/compose/)
-- [Dockerfile](https://docs.docker.com/engine/reference/builder/)
-
+- [postgres:latest](https://hub.docker.com/layers/library/postgres/latest/images/sha256-3648b6c2ac30de803a598afbaaef47851a6ee1795d74b4a5dcc09a22513b15c9?context=explore)
