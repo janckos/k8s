@@ -157,7 +157,6 @@ The expected result should looks like:
 }
 ```
 
-*El presente contenido irá cambiando a lo largo del diplomado para incorporar lo aprendido.*
 ## Referencias al proyecto
 Imágenes de Docker Hub: 
 - [How to Deploy PostgreSQL Instance to Kubernetes](https://sweetcode.io/how-to-deploy-postgresql-instance-to-kubernetes/ )
