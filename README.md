@@ -115,8 +115,8 @@ The expected result should looks like:
 		"id":1,
 		"title":"New Record",
 		"description": "This is a new record",
-		"created_at":"20 23-10-18T01:03:13.0888882",
-		"updated_at":"2023-10-18T01:03:13.008000Z"
+		"created_at":"20 23-10-19T01:03:13.0888882",
+		"updated_at":"2023-10-19T01:03:13.008000Z"
 		}
 }
 ```
