@@ -8,7 +8,7 @@ info:
     email: janckos@gmail.com
   version: v1
 servers:
-- url: http://localhost:9000/public
+- url: laravel-app-service/public
 tags:
 - name: tarea
   description: API del Recurso Task
