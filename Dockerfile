@@ -18,7 +18,7 @@ libjpeg62-turbo-dev \
 libpng-dev
 
 # Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # PHP Extensions
 RUN docker-php-ext-install gettext intl gd
