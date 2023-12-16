@@ -1,4 +1,4 @@
-## Descripción del proyecto
+## Descripción del proyecto.
 El proyecto pretende definir las bases de configuración y despliegue de aplicaciones web que utilizan Laravel como framework de desarrollo y una base de datos relacional de postgreSQL.
 ## Estructura del repositorio
 | Directorio/Archivo  | Descripción|
