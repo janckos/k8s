@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: clone-ka-run
+  namespace: user11
+spec:
+  pipelineRef:
+    name: clone-ka
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce 
+          resources:
+            requests:
+              storage: 500Mi
+    - name: kubeconfig-dir
+      emptyDir: {}
+    - name: manifest-dir
+      emptyDir: {}
+  serviceAccountName: tekton-pipeline
+  params:
+  - name: url
+    value: "https://github.com/janckos/k8s"
+  - name: image
+    value: 'docker.io/janckos/tasks:v8'

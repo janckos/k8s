@@ -1,0 +1,16 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tekton-trigger-binding
+spec:
+  params:
+  - name: repo-url
+    value: $(body.repository.clone_url)
+  - name: tag-name
+    value: master #$(body.repository.default_branch)
+  - name: image-full-path-with-tag
+    value: docker.io/janckos/tasks:v8
+  - name: deployment-script
+    value: https://raw.githubusercontent.com/cafaray/diplo-cloud-notificacion-service/main/scripts/deployment.sh
+  - name: maven-image
+    value: gcr.io/cloud-builders/mvn@sha256:8f38a2667125a8d83f6e1997847fedb6a06f041c90e2244884153d85d95f869b    
