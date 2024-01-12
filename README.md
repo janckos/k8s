@@ -6,7 +6,7 @@ El proyecto pretende definir las bases de configuración y despliegue de aplicac
 | [api.yaml](https://github.com/janckos/k8s/blob/master/api.yaml)   | Contiene la definición de los endpoints de la API.     |
 | [Dockerfile](https://github.com/janckos/cloud/blob/master/Dockerfile)   | Contiene las instrucciones para configurar un contenedor con php/apache y librerías necesarias para una aplicación/laravel.     |
 | [src/](https://github.com/janckos/cloud/tree/master/src)      | Contiene el código fuente de la aplicación/laravel y está vinculado a la ruta de despliegue de aplicaciones de apache.     |
-[resources/manifests/](https://github.com/janckos/k8s/tree/master/resources/manifests)      |Contiene los artefactos yaml de Kubernetes.     |
+[resources/manifests/](https://github.com/janckos/k8s/tree/master/resources/manifests)      |Contiene los artefactos yaml de Kubernetes: tareas, pipelines y triggers.     |
 ## Guía de despliegue
 Utiliza el comando kubectl apply para aplicar los archivos YAML (resources/manifests). Esto desplegará la aplicación en el clúster de Kubernetes:
 
@@ -157,24 +157,37 @@ The expected result should looks like:
 	"message": "Task deleted successfully!"
 }
 ```
+
+## Pipeline
+Ejecución manual de la Pipeline.
+
+``
+kubectl create -f pipelinerun-clone-ka.yaml -n user11
+``
+
 ## CI/CD
 Ejecución de Pipeline usando un trigger configurado con GitHub-WebHook.
+
 RBAC:\
 ``
 kubectl apply -f trigger-rbac.yaml -n user11
 ``
+
 Create the trigger template:\
 ``
 kubectl apply -f trigger-template.yaml -n user11
 ``
+
 Create the trigger binding:\
 ``
 kubectl apply -f trigger-binding.yaml -n user11
 ``
+
 Create the event listener:\
 ``
 kubectl apply -f event-listener.yaml -n user11
 ``
+
 Create Ing; or in OCP, expose the event listener svc as route:\
 ``
 oc expose svc/el-tekton-event-listener -n user11
