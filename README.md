@@ -157,7 +157,28 @@ The expected result should looks like:
 	"message": "Task deleted successfully!"
 }
 ```
-
+## CI/CD
+Ejecución de Pipeline usando un trigger configurado con GitHub-WebHook.
+RBAC:\
+``
+kubectl apply -f trigger-rbac.yaml -n user11
+``
+Create the trigger template:\
+``
+kubectl apply -f trigger-template.yaml -n user11
+``
+Create the trigger binding:\
+``
+kubectl apply -f trigger-binding.yaml -n user11
+``
+Create the event listener:\
+``
+kubectl apply -f event-listener.yaml -n user11
+``
+Create Ing; or in OCP, expose the event listener svc as route:\
+``
+oc expose svc/el-tekton-event-listener -n user11
+``
 ## Referencias al proyecto
 Imágenes de Docker Hub: 
 - [How to Deploy PostgreSQL Instance to Kubernetes](https://sweetcode.io/how-to-deploy-postgresql-instance-to-kubernetes/ )
