@@ -164,12 +164,15 @@ Ejecución manual de la Pipeline.
 ``
 kubectl apply -f docker-secret.yaml -n user11
 ``
+
 ``
 kubectl apply -f service-account.yaml -n user11
 ``
+
 ``
 kubectl apply -f pipeline-clone-ka.yaml -n user11
 ``
+
 ``
 kubectl apply -f pipelinerun-clone-ka.yaml -n user11
 ``
