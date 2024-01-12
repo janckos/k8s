@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: buildah-run-
+spec:
+  taskRef:
+    name: buildah
+  params:
+    - name: IMAGE
+      value: 'docker.io/janckos/tasks:v7'
+    - name: TLSVERIFY
+      value: 'false'
+    - name: STORAGE_DRIVER
+      value: 'vfs'
+  workspaces:
+    - name: source
+      persistentVolumeClaim:
+        claimName: shared-workspace
+  serviceAccountName: tekton-pipeline
